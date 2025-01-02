@@ -31,4 +31,5 @@ test.only('UI Control', async ({page})=> {
     await signIn.click();
     await cardTitles.first().waitFor();
     const allTitles = await cardTitles.allTextContents();
+    console.log(allTitles);
 });
