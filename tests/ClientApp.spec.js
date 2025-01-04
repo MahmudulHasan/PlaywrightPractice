@@ -37,4 +37,25 @@ test('Client App Login', async ({page})=> {
     const bool = await page.locator("h4:has-text('Samsung Note 8')").isVisible();
     expect(bool).toBeTruthy();
     //await page.pause();
+    await page.locator("button[class='btn btn-success']").click();
+    await page.locator("#country").pressSequentially("Ban");
+    const dropdownCountry = await page.locator(".container .suggestions");
+    await dropdownCountry.waitFor();
+    const optionCount = await dropdownCountry.locator("a").count();
+    for(let i = 0; i < optionCount; i++) {
+        const countryText = await dropdownCountry.locator("a").nth(i).textContent();
+        if(countryText === "Bangladesh") {
+            await dropdownCountry.locator("a").nth(i).click();
+            break;
+        }
+    }
+    await page.locator("footer div").click();
+    const checkbox = await page.locator("label[for='checkbox2']");
+    //await checkbox.waitFor();
+    //await page.locator("#checkbox2").waitFor().click();
+    await checkbox.click();
+    await page.locator("input[value='Purchase']").click();
+    const successMessage = await page.locator('[class="alert alert-success alert-dismissible"]').textContent();
+    await console.log(successMessage);
+    await page.pause();
 });
