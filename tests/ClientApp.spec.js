@@ -32,5 +32,9 @@ test('Client App Login', async ({page})=> {
             break;
         }
     }
-    await page.pause();
+    await page.locator("#navbarResponsive a").click();
+    await page.locator("table td a").first().waitFor();
+    const bool = await page.locator("h4:has-text('Samsung Note 8')").isVisible();
+    expect(bool).toBeTruthy();
+    //await page.pause();
 });
