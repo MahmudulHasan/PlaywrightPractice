@@ -17,7 +17,7 @@ test('First Playwright test', async ({page})=> {
     console.log(allTitles);
 });
 
-test.only('UI Control', async ({page})=> {
+test('UI Control', async ({page})=> {
     const userName = page.locator("#username");
     const signIn = page.locator("#signInBtn");
     const cardTitles = page.locator(".card-body a");
@@ -35,5 +35,22 @@ test.only('UI Control', async ({page})=> {
     await expect(documentlink).toHaveAttribute("class", "blinkingText");
     await signIn.click();
     await cardTitles.first().waitFor();
-    const allTitles = await cardTitles.allTextContents();
+    //const allTitles = await cardTitles.allTextContents();
+});
+
+test.only('Child window handle', async ({browser, page})=> {
+    const context = await browser.newContext();
+    const userName = page.locator("#username");
+    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
+    const documentlink = page.locator("[href*='documents-request']");
+    const [newPage] = await Promise.all([
+        context.waitForEvent('page'),
+        documentlink.click()
+    ]);
+    const text =  await newPage.locator(".red").textContent();
+    const arrayText = text.split("@");
+    const domain = arrayText[1].split(" ")[0];
+    await userName.fill(domain);
+    await page.pause();_
+    console.log(await page.locator("#username").textContent());
 });
