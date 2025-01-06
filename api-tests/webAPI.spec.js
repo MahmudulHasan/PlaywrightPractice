@@ -1,4 +1,19 @@
-const {test, expect} = require('@playwright/test');
+const {test, expect, request} = require('@playwright/test');
+const loginPayload = {userEmail:"anshika@gmail.com",userPassword:"Iamking@000"};
+let token;
+test.beforeAll( async () => {
+     const apiContext = await request.newContext();
+     const loginResponse = await apiContext.post("https://rahulshettyacademy.com/api/ecom/auth/login",
+       { data:loginPayload });
+       expect(loginResponse.ok()).toBeTruthy();
+       const loginResponseJson = await loginResponse.json();
+       token = loginResponseJson.token;
+       console.log(token);
+});
+
+test.beforeEach( ()=> {
+
+});
 
 test('Client App Login', async ({page})=> {
     const userName = page.locator("#username");
@@ -8,18 +23,11 @@ test('Client App Login', async ({page})=> {
     const cardTitles = page.locator(".card-body a");
     const dropdown = page.locator("select.form-control"); 
     const documentlink = page.locator("[href*='documents-request']");
-    const productName = "Samsung Note 8";
-    await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
-    await userName.fill("rahulshettyacademy");
-    await page.locator("[type='password']").fill("learning");
-    dropdown.selectOption("consult");
-    await page.locator('.radiotextsty').last().click();
-    expect(await page.locator('.radiotextsty').last()).toBeChecked();
-    await page.locator('#okayBtn').click();
-    await page.locator("#terms").click();
-    expect(await page.locator('#terms')).toBeChecked();
-    await expect(documentlink).toHaveAttribute("class", "blinkingText");
-    await signIn.click();
+    const productName = "Zara Coat 4";
+    await page.addInitScript(value => {
+        window.localStorage.setItem('token', value);
+    }, token);
+    await page.goto("https://rahulshettyacademy.com/client/");
     await cardTitles.first().waitFor();
     const allTitles = await cardTitles.allTextContents();
     console.log(allTitles);
@@ -58,20 +66,4 @@ test('Client App Login', async ({page})=> {
     const successMessage = await page.locator('[class="alert alert-success alert-dismissible"]').textContent();
     await console.log(successMessage);
     await page.pause();
-});
-
-test('Playwright Special locators', async ({ page }) => {
-  
-    await page.goto("https://rahulshettyacademy.com/angularpractice/");
-    await page.getByLabel("Check me out if you Love IceCreams!").click();
-    await page.getByLabel("Employed").check();
-    await page.getByLabel("Gender").selectOption("Female");
-    await page.getByPlaceholder("Password").fill("abc123");
-    await page.getByRole("button", {name: 'Submit'}).click();
-    await page.getByText("Success! The Form has been submitted successfully!.").isVisible();
-    await page.getByRole("link",{name : "Shop"}).click();
-    await page.locator("app-card").filter({hasText: 'Nokia Edge'}).getByRole("button").click();
- 
-    //locator(css)
- 
 });
