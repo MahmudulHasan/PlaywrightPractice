@@ -1,7 +1,9 @@
-class APiUtils
+export class APiUtils
 {
+    apiContext:any;
+    loginPayLoad:string;
 
-    constructor(apiContext,loginPayLoad)
+    constructor(apiContext:any,loginPayLoad:string)
     {
         this.apiContext =apiContext; 
         this.loginPayLoad = loginPayLoad;
@@ -21,9 +23,9 @@ class APiUtils
 
     }
 
-    async createOrder(orderPayLoad)
+    async createOrder(orderPayLoad:string)
     {
-        let response = {};
+        let response = {token : String,orderId : String};
        response.token = await this.getToken();
     const orderResponse = await this.apiContext.post("https://rahulshettyacademy.com/api/ecom/order/create-order",
    {
@@ -41,6 +43,8 @@ class APiUtils
 
    return response;
 }
+
+
 
     }
 module.exports = {APiUtils};

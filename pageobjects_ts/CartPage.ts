@@ -1,8 +1,16 @@
-const {test, expect} = require('@playwright/test');
-class CartPage
+import {test, expect,Locator,Page} from '@playwright/test';
+export class CartPage
 {
+
+cartProducts : Locator;
+productsText : Locator;
+cart :Locator;
+orders : Locator;
+checkout : Locator;
+page : Page;
+
     
-constructor(page)
+constructor(page: Page)
 {
     this.page = page;
     this.cartProducts = page.locator("div li").first();
@@ -13,7 +21,7 @@ constructor(page)
 
 }
 
-async VerifyProductIsDisplayed(productName)
+async VerifyProductIsDisplayed(productName:string)
 {
    
     await this.cartProducts.waitFor();
@@ -27,7 +35,7 @@ async Checkout()
     await this.checkout.click();
 }
 
- getProductLocator(productName)
+ getProductLocator(productName:string)
 {
     return  this.page.locator("h3:has-text('"+productName+"')");
 }
